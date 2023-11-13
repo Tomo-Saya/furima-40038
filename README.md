@@ -2,14 +2,14 @@
 
 | Column             | Type   | Options                   |
 | ------------------ | ------ | ------------------------- |
-| nickname           | string |                           |
+| nickname           | string | null: false               |
 | email              | string | null: false, unique: true |
-| encrypted_password | string |                           |
-| name_last          | string | null: false,              |
-| name_first         | string | null: false,              |
-| name_kana_last     | string | null: false,              |
-| name_kana_first    | string | null: false,              |
-| birthday           | date   | null: false,              |
+| encrypted_password | string | null: false               |
+| name_last          | string | null: false               |
+| name_first         | string | null: false               |
+| name_kana_last     | string | null: false               |
+| name_kana_first    | string | null: false               |
+| birthday           | date   | null: false               |
 
 ## Association
  - has_many : items
@@ -69,8 +69,9 @@
 | Column        | Type       | Options                         |
 | ------------- | ------     | ------------------------------- |
 | postcode      | string     | null: false                     |
-| address       | string     | null: false                     |
 | prefecture_id | integer    | null: false                     |
+| city          | string     | null: false                     |
+| address       | string     | null: false                     |
 | building      | string     |                                 |
 | tel           | string     | null: false                     |
 | order         | references | null: false, foreign_keys: true |
