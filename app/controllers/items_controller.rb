@@ -1,6 +1,10 @@
 class ItemsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create]
 
+  def index
+    @items = Item.includes(:user).order('created_at DESC')
+  end
+  
   def new
     @item = Item.new
   end
@@ -13,6 +17,9 @@ class ItemsController < ApplicationController
       @error_messages = @item.errors.full_messages
       render 'new', status: :unprocessable_entity
     end
+  end
+
+  def show
   end
 
   private
