@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Item, type: :model do
-
   before do
-    @item = FactoryBot.create(:item)
+    @user = FactoryBot.create(:user)
+    @item = FactoryBot.build(:item, user: @user)
   end
 
   describe '商品出品機能' do
@@ -41,7 +41,7 @@ RSpec.describe Item, type: :model do
       it 'ユーザー登録していないと出品できない' do
         @item.user_id = nil
         @item.valid?
-        expect(@item.errors.full_messages).to include('User must exist', "User can't be blank")
+        expect(@item.errors.full_messages).to include('User must exist')
       end
       it '画像が1枚ないと出品できない' do
         @item.image = nil
@@ -58,35 +58,61 @@ RSpec.describe Item, type: :model do
         @item.valid?
         expect(@item.errors.full_messages).to include("Description can't be blank")
       end
-      it 'カテゴリーが「---」だと出品できない' do
+      it 'カテゴリーが空欄だと出品できない' do
         @item.category_id = ''
         @item.valid?
-        expect(@item.errors.full_messages).to include("Category must be other than ---")
+        expect(@item.errors.full_messages).to include('Category must be other than ---')
       end
-      it '商品の状態が「---」だと出品できない' do
+      it 'カテゴリーが「---」だと出品できない' do
+        @item.category_id = '1'
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Category must be other than ---')
+      end
+      it '商品の状態が空欄だと出品できない' do
         @item.condition_id = ''
         @item.valid?
-        expect(@item.errors.full_messages).to include("Condition must be other than ---")
+        expect(@item.errors.full_messages).to include('Condition must be other than ---')
       end
-      it '配送料の負担が「---」だと出品できない' do
+      it '商品の状態が「---」だと出品できない' do
+        @item.condition_id = '1'
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Condition must be other than ---')
+      end
+      it '配送料の負担が空欄だと出品できない' do
         @item.cost_id = ''
         @item.valid?
-        expect(@item.errors.full_messages).to include("Cost must be other than ---")
+        expect(@item.errors.full_messages).to include('Cost must be other than ---')
       end
-      it '発送元の地域が「---」だと出品できない' do
+      it '配送料の負担が「---」だと出品できない' do
+        @item.cost_id = '1'
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Cost must be other than ---')
+      end
+      it '発送元の地域が空欄だと出品できない' do
         @item.prefecture_id = ''
         @item.valid?
-        expect(@item.errors.full_messages).to include("Prefecture must be other than ---")
+        expect(@item.errors.full_messages).to include('Prefecture must be other than ---')
       end
-      it '発送までの日数が「---」だと出品できない' do
+      it '発送元の地域が「---」だと出品できない' do
+        @item.prefecture_id = '1'
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Prefecture must be other than ---')
+      end
+      it '発送までの日数が空欄だと出品できない' do
         @item.shipping_day_id = ''
         @item.valid?
-        expect(@item.errors.full_messages).to include("Shipping day must be other than ---")
+        expect(@item.errors.full_messages).to include('Shipping day must be other than ---')
+      end
+
+      it '発送までの日数が「---」だと出品できない' do
+        @item.shipping_day_id = '1'
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Shipping day must be other than ---')
       end
       it '価格が空欄だと出品できない' do
         @item.price = ''
         @item.valid?
-        expect(@item.errors.full_messages).to include("Price can't be blank", 'Price is not a number' )
+        expect(@item.errors.full_messages).to include("Price can't be blank", 'Price is not a number')
       end
       it '価格が300円未満だと出品できない' do
         @item.price = 100
@@ -97,6 +123,11 @@ RSpec.describe Item, type: :model do
         @item.price = 10_000_000
         @item.valid?
         expect(@item.errors.full_messages).to include('Price must be less than or equal to 9999999')
+      end
+      it '価格が半角数字以外が含まれていると出品できない' do
+        @item.price = '１０００'
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is not a number')
       end
     end
   end
