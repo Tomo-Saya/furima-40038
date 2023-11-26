@@ -3,8 +3,8 @@ class Item < ApplicationRecord
 
   belongs_to :user
   has_one_attached :image
+  has_one :order
   # has_many :comments
-  # has_one :order
 
   belongs_to_active_hash :category
   belongs_to_active_hash :condition
@@ -32,6 +32,7 @@ class Item < ApplicationRecord
     validates :prefecture_id
     validates :shipping_day_id
   end
+
   def valid_price_format
     return if price.to_s.match?(/\A\d+\z/)
 
